@@ -72,48 +72,48 @@ const App = (root: any) => {
   noise.autostart = false;
   synth.autostart = false;
 
-  // const buffer = .1;
+  const buffer = .455;
 
-  // beat.addEventListener(
-  //   'ended',
-  //   () => {
-  //     if (beat.loop()) {
-  //       beat.seek(0);
-  //       beat.play();
-  //     }
-  //   },
-  //   false
-  // );
-  // atmos.addEventListener(
-  //   'ended',
-  //   () => {
-  //     if (atmos.loop()) {
-  //       atmos.seek(0);
-  //       atmos.play();
-  //     }
-  //   },
-  //   false
-  // );
-  // synth.addEventListener(
-  //   'ended',
-  //   () => {
-  //     if (synth.loop()) {
-  //       synth.seek(0);
-  //       synth.play();
-  //     }
-  //   },
-  //   false
-  // );
-  // noise.addEventListener(
-  //   'ended',
-  //   () => {
-  //     if (noise.loop()) {
-  //       noise.seek(0);
-  //       noise.play();
-  //     }
-  //   },
-  //   false
-  // );
+  beat.addEventListener(
+    'ended',
+    () => {
+      if (beat.loop()) {
+        beat.seek(buffer);
+        beat.play();
+      }
+    },
+    false
+  );
+  atmos.addEventListener(
+    'ended',
+    () => {
+      if (atmos.loop()) {
+        atmos.seek(buffer);
+        atmos.play();
+      }
+    },
+    false
+  );
+  synth.addEventListener(
+    'ended',
+    () => {
+      if (synth.loop()) {
+        synth.seek(buffer);
+        synth.play();
+      }
+    },
+    false
+  );
+  noise.addEventListener(
+    'ended',
+    () => {
+      if (noise.loop()) {
+        noise.seek(buffer);
+        noise.play();
+      }
+    },
+    false
+  );
 
   const generateBeat = () => {
     var max = 12;
