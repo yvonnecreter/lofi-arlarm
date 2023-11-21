@@ -73,7 +73,7 @@ const App = (root: any) => {
   noise.autostart = false;
   synth.autostart = false;
 
-  const buffer = .5;
+  const buffer = 50;
 
   beat.addEventListener(
     'ended',
@@ -117,8 +117,8 @@ const App = (root: any) => {
   );
 
   const generateBeat = () => {
-    var max = 12;
-    var min = 15;
+    var max = 16;
+    var min = 12;
     var rand: any = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
       beat.alt = "playing"
@@ -137,8 +137,8 @@ const App = (root: any) => {
   }
 
   const generateNoise = () => {
-    var max = 17;
-    var min = 20;
+    var max = 21;
+    var min = 17;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
       noise.alt = "playing"
@@ -157,7 +157,7 @@ const App = (root: any) => {
   }
 
   const generateAtmos = () => {
-    var max = 5;
+    var max = 6;
     var min = 2;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
@@ -177,8 +177,8 @@ const App = (root: any) => {
   }
   const generateSynth = () => {
 
-    var max = 7;
-    var min = 10;
+    var max = 11;
+    var min = 7;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
       synth.alt = "playing"
