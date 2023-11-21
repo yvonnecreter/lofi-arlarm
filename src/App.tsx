@@ -5,6 +5,7 @@ import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import { motion, useAnimate } from 'framer-motion';
 import { getElementError } from "@testing-library/react";
 
+
 const format = ".wav";
 const path = "export/alarm-generator-loops ";
 // const no: Array<any> = ["2", "3", "4", "5", "7", "8", "9", "10", "12", "13", "14", "15", "17", "18", "19", "20"];
@@ -384,6 +385,10 @@ const App = (root: any) => {
       a.play();
     }
   }
+  const stop = (a: any) => {
+    a.pause();
+  }
+
 
   return (
     <ReactScrollWheelHandler
@@ -428,17 +433,42 @@ const App = (root: any) => {
           ) : (
             <div>
               <h1>
-                Wakeup Sound
+                Wakeup Sound Generator
               </h1>
               <h3>
                 Generate
               </h3>
               <section className="containerSpaceReg">
                 <p style={{ width: "80px" }}>Beat: {Math.floor(counter / 1000) + 1}</p>
-                <button onClick={(e) => { e.stopPropagation(); generateBeat(); }} className="gradientButton" style={{ pointerEvents: "all" }}> beat </button>
-                <button onClick={(e) => { e.stopPropagation(); generateAtmos(); }} className="gradientButton" style={{ pointerEvents: "all" }}> atmos </button>
-                <button onClick={(e) => { e.stopPropagation(); generateNoise(); }} className="gradientButton" style={{ pointerEvents: "all" }}> noise </button>
-                <button onClick={(e) => { e.stopPropagation(); generateSynth(); }} className="gradientButton" style={{ pointerEvents: "all" }}> synth </button>
+                <button onClick={(e) => { e.stopPropagation(); generateBeat(); }} className="gradientButton" style={{ pointerEvents: "all" }}> beat
+                  <svg viewBox="0 0 24 24" fill="none" className="closeButton"
+                    xmlns="http://www.w3.org/2000/svg" onClick={(e) => { e.stopPropagation(); stop(beat) }} >
+                    <g id="Menu / Close_SM">
+                      <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                  </svg>
+                </button>
+                <button onClick={(e) => { e.stopPropagation(); generateAtmos(); }} className="gradientButton" style={{ pointerEvents: "all" }}> atmos
+                  <svg viewBox="0 0 24 24" fill="none" className="closeButton"
+                    xmlns="http://www.w3.org/2000/svg" onClick={(e) => { e.stopPropagation(); stop(atmos) }} >
+                    <g id="Menu / Close_SM">
+                      <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                  </svg></button>
+                <button onClick={(e) => { e.stopPropagation(); generateNoise(); }} className="gradientButton" style={{ pointerEvents: "all" }}> noise
+                  <svg viewBox="0 0 24 24" fill="none" className="closeButton"
+                    xmlns="http://www.w3.org/2000/svg" onClick={(e) => { e.stopPropagation(); stop(atmos) }} >
+                    <g id="Menu / Close_SM">
+                      <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                  </svg> </button>
+                <button onClick={(e) => { e.stopPropagation(); generateSynth(); }} className="gradientButton" style={{ pointerEvents: "all" }}> synth
+                  <svg viewBox="0 0 24 24" fill="none" className="closeButton"
+                    xmlns="http://www.w3.org/2000/svg" onClick={(e) => { e.stopPropagation(); stop(synth) }} >
+                    <g id="Menu / Close_SM">
+                      <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </g>
+                  </svg></button>
               </section>
               <br />
               <section className="containerSpaceReg">

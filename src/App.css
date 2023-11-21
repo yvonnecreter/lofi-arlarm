@@ -120,11 +120,124 @@
   animation-play-state: running;
 }
 
+.closeButton {
+  --scaleafter: 1.2;
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  padding: 1px;
+  width: 23px;
+  height: 23px;
+  z-index: 9999;
+  background-color: #282828;
+  pointer-events: all;
+  border-radius: 10px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.4),
+    -6px -6px 12px rgba(0, 0, 0, 0);
+  -webkit-animation: hover-scale-out 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: hover-scale-out .7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.closeButton:hover {
+  -webkit-animation: hover-scale-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: hover-scale-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.scale-in-center {
+  -webkit-animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@-webkit-keyframes scale-in-center {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in-center {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes hover-scale-in {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(var(--scaleafter));
+    transform: scale(var(--scaleafter));
+    opacity: 1;
+  }
+}
+
+@keyframes hover-scale-in {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(var(--scaleafter));
+    transform: scale(var(--scaleafter));
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes hover-scale-out {
+  0% {
+    -webkit-transform: scale(var(--scaleafter));
+    transform: scale(var(--scaleafter));
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes hover-scale-out {
+  0% {
+    -webkit-transform: scale(var(--scaleafter));
+    transform: scale(var(--scaleafter));
+    opacity: 1;
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @keyframes rotate-hue {
   to {
     filter: hue-rotate(1turn);
   }
 }
+
 
 .gradientButton,
 .gradientButton::after {
