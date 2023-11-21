@@ -7,18 +7,18 @@ import { getElementError } from "@testing-library/react";
 
 const format = ".wav";
 const path = "export/alarm-generator-loops ";
-const no: Array<any> = ["2", "3", "4", "5", "7", "8", "9", "10", "12", "13", "14", "15", "17", "18", "19", "20"];
-const func = () => (no.forEach((filename) => {
-  no[filename] = new Audio("");
-  no[filename].src = path + filename + format;
-  no[filename].preload();
-}));
+// const no: Array<any> = ["2", "3", "4", "5", "7", "8", "9", "10", "12", "13", "14", "15", "17", "18", "19", "20"];
+// const func = () => (no.forEach((filename) => {
+//   no[filename] = new Audio("");
+//   no[filename].src = path + filename + format;
+//   no[filename].preload();
+// }));
 const clickAudio = new Audio("SC_EK_synth_lofi_chime_7th_Am.wav");
 const memories: Array<any> = [
-  new Audio(path + 25 + format),
-  new Audio(path + 24 + format),
-  new Audio(path + 23 + format),
-  new Audio(path + 22 + format),
+  new Audio("export/memories " + 25 + format),
+  new Audio("export/memories " + 24 + format),
+  new Audio("export/memories " + 23 + format),
+  new Audio("export/memories " + 22 + format),
 ]
 
 const App = (root: any) => {
@@ -31,7 +31,7 @@ const App = (root: any) => {
   const [time, setTime] = useState(maxTimer);
   const [timerStart, setTimerStart] = useState(false);
 
-  const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
+  const { unityProvider, isLoaded, loadingProgression, addEventListener, removeEventListener } = useUnityContext({
     loaderUrl: "build/build.loader.js",
     dataUrl: "build/build.data",
     frameworkUrl: "build/build.framework.js",
@@ -306,14 +306,25 @@ const App = (root: any) => {
       `screen and (resolution: ${devicePixelRatio}dppx)`
     );
     mediaMatcher.addEventListener("change", updateDevicePixelRatio);
+    addEventListener("MouseUp", playMemory);
 
     return function () {
       mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
+      removeEventListener("MouseUp", playMemory);
       clearInterval(interval);
     };
   },
-    [devicePixelRatio, timerStart, counter, start, queue, now]
+    [devicePixelRatio, timerStart, counter, start, queue, now, addEventListener, removeEventListener]
   );
+
+  function playMemory() {
+    console.log("memory triggered");
+    var max = 0;
+    var min = 3;
+    var rand = (Math.floor(Math.random() * (max - min)) + min);
+    memories[rand].currentTime = 0;
+    memories[rand].play();
+  }
 
   const sync = () => {
     // setTime(1);
@@ -357,8 +368,8 @@ const App = (root: any) => {
     >
       <video autoPlay src="pillows-back-new0001-0100.webm" muted id="vid-bg"
         style={{
-          position: "absolute", width: "100%",
-          height: "100%", objectFit: "cover", pointerEvents: "none"
+          position: "absolute", width: "105%", right: "0px",
+          height: "105%", objectFit: "cover", pointerEvents: "none"
         }}
       />
       {/* <img src="background.png" alt="background" style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }} /> */}
@@ -454,10 +465,10 @@ const App = (root: any) => {
           )}
         </motion.div>
       </div>
-      <video autoPlay src="pillows-back0001-0100.webm" muted id="vid-fg"
+      <video autoPlay src="pillows-front-new0001-0100.webm" muted id="vid-fg"
         style={{
-          position: "absolute", width: "100%",
-          height: "100%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
+          position: "absolute", width: "110%", right: "0px",
+          height: "110%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
         }}
       />
     </ReactScrollWheelHandler >
