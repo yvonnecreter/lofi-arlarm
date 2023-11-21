@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import "./App.css";
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
-import { motion, useAnimate } from 'framer-motion';
+import { motion, useAnimate, useDragControls } from 'framer-motion';
 import { getElementError } from "@testing-library/react";
 
 
@@ -15,6 +15,7 @@ const path = "export/alarm-generator-loops ";
 //   no[filename].preload();
 // }));
 const clickAudio = new Audio("SC_EK_synth_lofi_chime_7th_Am.wav");
+
 const memories: Array<any> = [
   new Audio("export/memories " + 25 + format),
   new Audio("export/memories " + 24 + format),
@@ -442,6 +443,8 @@ const App = (root: any) => {
     }
   }
 
+  const constraints = useRef(null);
+
 
   return (
     <ReactScrollWheelHandler
@@ -455,7 +458,13 @@ const App = (root: any) => {
         }}
       />
       {/* <img src="background.png" alt="background" style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }} /> */}
-
+      <div ref={constraints} style={{
+        position: "absolute", /* width: "100%", height: "100%", margin: "100px", */
+        top: "100px",
+        bottom: " 100px",
+        left: "100px",
+        right: " 100px", pointerEvents: "none"
+      }} />
       <Unity
         unityProvider={unityProvider}
         style={{
@@ -469,12 +478,23 @@ const App = (root: any) => {
         height: "100%", objectFit: "cover", pointerEvents: "none",
         display: "flex", justifyContent: "center", alignItems: "center"
       }}>
-        <motion.div style={{ color: "white", pointerEvents: "all" }} id="soundbox" className="card"
+        <motion.div style={{ color: "white", pointerEvents: "all" }}
+          id="soundbox" className="card" drag
+          dragConstraints={constraints}
+          // dragConstraints={{
+          //   top: -300,
+          //   right: 300,
+          //   bottom: 300,
+          //   left: -300,
+          // }}
+          dragTransition={{ bounceStiffness: 600, bounceDamping: 15 }}
+          dragElastic={0.5}
+          whileTap={{ cursor: "grabbing" }}
           onClick={(e) => {
             e.stopPropagation();
             flipCard();
           }}
-          ref={scope}>
+          ref={scope} >
 
           {flipped ? (
             <div className="centered">
