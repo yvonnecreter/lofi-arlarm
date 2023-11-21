@@ -4,6 +4,8 @@ import "./App.css";
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 import { motion, useAnimate } from 'framer-motion';
 import { getElementError } from "@testing-library/react";
+import { Howl, Howler } from "howler";
+import { hover } from "@testing-library/user-event/dist/hover";
 
 const format = ".wav";
 const path = "export/alarm-generator-loops ";
@@ -14,17 +16,110 @@ const path = "export/alarm-generator-loops ";
 //   no[filename].preload();
 // }));
 const clickAudio = new Audio("SC_EK_synth_lofi_chime_7th_Am.wav");
-const memories: Array<any> = [
-  new Audio("export/memories " + 25 + format),
-  new Audio("export/memories " + 24 + format),
-  new Audio("export/memories " + 23 + format),
-  new Audio("export/memories " + 22 + format),
-]
+// const memories: Array<any> = [
+//   new Audio("export/memories " + 25 + format),
+//   new Audio("export/memories " + 24 + format),
+//   new Audio("export/memories " + 23 + format),
+//   new Audio("export/memories " + 22 + format),
+// ]
 
 const App = (root: any) => {
+  var initialized = false;
+
+  const beatList: Array<Howl> = [
+    new Howl({
+      src: [path + "2" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "3" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "4" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "5" + format],
+      loop: true,
+      autoplay: false
+    })
+  ]
+  const atmosList: Array<Howl> = [
+    new Howl({
+      src: [path + "2" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "3" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "4" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "5" + format],
+      loop: true,
+      autoplay: false
+    })
+  ]
+  const noiseList: Array<Howl> = [
+    new Howl({
+      src: [path + "2" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "3" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "4" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "5" + format],
+      loop: true,
+      autoplay: false
+    })
+  ]
+  const synthList: Array<Howl> = [
+    new Howl({
+      src: [path + "2" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "3" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "4" + format],
+      loop: true,
+      autoplay: false
+    }),
+    new Howl({
+      src: [path + "5" + format],
+      loop: true,
+      autoplay: false
+    })
+  ]
+
   const [volume, setVolume] = useState(.1)
   const [muted, setMuted] = useState(false)
   const finalVolume = muted ? 0 : volume ** 2
+
+  Howler.volume(volume);
 
   const maxTimer = 4;
   const maxCounter = 4000;
@@ -46,92 +141,74 @@ const App = (root: any) => {
     },
   });
 
-
-
   const [devicePixelRatio, setDevicePixelRatio] = useState(
     window.devicePixelRatio
   );
 
-  let [beat, setBeat] = useState<any>(new Audio(""));
-  let [atmos, setAtmos] = useState<any>(new Audio(""));
-  let [noise, setNoise] = useState<any>(new Audio(""));
-  let [synth, setSynth] = useState<any>(new Audio(""));
+  let [beat, setBeat] = useState<any>(beatList[Math.floor(Math.random() * beatList.length - 1)]);
+  let [atmos, setAtmos] = useState<any>(atmosList[Math.floor(Math.random() * atmosList.length - 1)]);
+  let [noise, setNoise] = useState<any>(noiseList[Math.floor(Math.random() * noiseList.length - 1)]);
+  let [synth, setSynth] = useState<any>(synthList[Math.floor(Math.random() * synthList.length - 1)]);
 
   let blocked = [false, false, false, false];
 
-  beat.loop = true;
-  atmos.loop = true;
-  noise.loop = true;
-  synth.loop = true;
-  beat.volume = volume;
-  atmos.volume = volume;
-  noise.volume = volume;
-  synth.volume = volume;
-  beat.autostart = false;
-  atmos.autostart = false;
-  noise.autostart = false;
-  synth.autostart = false;
+  // beat.loop = true;
+  // atmos.loop = true;
+  // noise.loop = true;
+  // synth.loop = true;
+  // beat.autostart = false;
+  // atmos.autostart = false;
+  // noise.autostart = false;
+  // synth.autostart = false;
 
   const buffer = .1;
 
-  beat.addEventListener(
-    'ended',
-    () => {
-      if (beat.loop()) {
-        beat.seek(0);
-        beat.play();
-      }
-    },
-    false
-  );
-  atmos.addEventListener(
-    'ended',
-    () => {
-      if (atmos.loop()) {
-        atmos.seek(0);
-        atmos.play();
-      }
-    },
-    false
-  );
-  synth.addEventListener(
-    'ended',
-    () => {
-      if (synth.loop()) {
-        synth.seek(0);
-        synth.play();
-      }
-    },
-    false
-  );
-  noise.addEventListener(
-    'ended',
-    () => {
-      if (noise.loop()) {
-        noise.seek(0);
-        noise.play();
-      }
-    },
-    false
-  );
+  // beat.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (beat.loop()) {
+  //       beat.seek(0);
+  //       beat.play();
+  //     }
+  //   },
+  //   false
+  // );
+  // atmos.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (atmos.loop()) {
+  //       atmos.seek(0);
+  //       atmos.play();
+  //     }
+  //   },
+  //   false
+  // );
+  // synth.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (synth.loop()) {
+  //       synth.seek(0);
+  //       synth.play();
+  //     }
+  //   },
+  //   false
+  // );
+  // noise.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (noise.loop()) {
+  //       noise.seek(0);
+  //       noise.play();
+  //     }
+  //   },
+  //   false
+  // );
 
   const generateBeat = () => {
-    var max = 12;
-    var min = 15;
-    var rand: any = "" + (Math.floor(Math.random() * (max - min)) + min);
+    var rand: any = (Math.floor(Math.random() * beatList.length));
     const f = () => {
-      beat.pause();
-      beat.src = path + rand + format;
-      // beat.prototype._createNodes = function () {
-      //   var context = beat._context;
-      //   this._sourceNode = context.createBufferSource();
-      // };
-      // setBeat = songs[rand];
-      beat.play();
-      if (!isPlaying(beat)) {
-        beat.play();
-        // beat.currentTime = 0;
-      }
+      beatList[rand].play();
+      console.log("f executed")
     }
     setQueue([...queue, f])
     if (!timerStart) {
@@ -146,13 +223,8 @@ const App = (root: any) => {
     const f = () => {
       noise.pause();
       noise.src = path + rand + format;
-      // noise.prototype._createNodes = function () {
-      //   var context = noise._context;
-      //   this._sourceNode = context.createBufferSource();
-      // };
       if (!isPlaying(noise)) {
         noise.play();
-        // noise.currentTime = 0;
       }
     }
     setQueue([...queue, f])
@@ -168,10 +240,6 @@ const App = (root: any) => {
     const f = () => {
       atmos.pause();
       atmos.src = path + rand + format;
-      // atmos.prototype._createNodes = function () {
-      //   var context = noise._context;
-      //   this._sourceNode = atmos.createBufferSource();
-      // };
       if (!isPlaying(atmos)) {
         atmos.play();
       }
@@ -189,13 +257,8 @@ const App = (root: any) => {
     const f = () => {
       synth.pause();
       synth.src = path + rand + format;
-      // synth.prototype._createNodes = function () {
-      //   var context = noise._context;
-      //   this._sourceNode = synth.createBufferSource();
-      // };
       if (!isPlaying(synth)) {
         synth.play();
-        // synth.currentTime = 0;
       }
     }
     setQueue([...queue, f])
@@ -205,8 +268,8 @@ const App = (root: any) => {
 
   }
 
-  function isPlaying(audio: HTMLAudioElement) {
-    return !audio.paused;
+  function isPlaying(audio: Howl) {
+    return audio.playing();
   }
 
   const [queue, setQueue] = useState<any>([]);
@@ -249,34 +312,17 @@ const App = (root: any) => {
   let v2: HTMLVideoElement = document.getElementById("vid-fg") as HTMLVideoElement;
   v2 && (v2.playbackRate = 0.4);
   v && (v.playbackRate = 0.4);
-  const vidinterval = 1;
-  //currenttime in seconds
 
-  // var bg = root;
   const nextIndex = () => {
-    // v.pause();
-    // v2.pause();
-    // v.currentTime -= vidinterval;
-    // v2.currentTime -= vidinterval;
-    // bg && (bg.style.background = "linear-gradient(to bottom, #b7eaff 0%,#94dfff 100%)");
-    // anim();
   }
 
   const prevIndex = () => {
-    // v.currentTime = 0;
-    // v.play();
-    // v2.currentTime = 0;
-    // v2.play();
-    // bg && (bg.style.background = "linear-gradient(to bottom, #b7eaff 0%,#94dfff 100%)");
-    // anim();
   }
 
   //CHANGING BACKGROUND IS NOT WORKING  T.T taken out temporarily in the hopes future me might be able to fix it
   const anim = () => {
-    // document.styleSheets[0].insertRule(':root {background = linear-gradient(to bottom, #94c5f8 1%,#a6e6ff 70%,#b1b5ea 100%)}');
   }
 
-  // (isLoaded) && (bg && (bg.style.background = "linear-gradient(to bottom, #020111 10%,#3a3a52 100%)"));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -297,66 +343,72 @@ const App = (root: any) => {
 
     const updateDevicePixelRatio = function () {
       setDevicePixelRatio(window.devicePixelRatio);
-      v.currentTime = 0;
-      v.play();
-      v2.currentTime = 0;
-      v2.play();
+      // v.currentTime = 0;
+      // v.play();
+      // v2.currentTime = 0;
+      // v2.play();
     };
     const mediaMatcher = window.matchMedia(
       `screen and (resolution: ${devicePixelRatio}dppx)`
     );
     mediaMatcher.addEventListener("change", updateDevicePixelRatio);
-    addEventListener("MouseUp", playMemory);
+    // addEventListener("MouseUp", playMemory);
 
     return function () {
       mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
-      removeEventListener("MouseUp", playMemory);
+      // removeEventListener("MouseUp", playMemory);
       clearInterval(interval);
     };
   },
     [devicePixelRatio, timerStart, counter, start, queue, now, addEventListener, removeEventListener]
   );
 
-  function playMemory() {
-    console.log("memory triggered");
-    var max = 0;
-    var min = 3;
-    var rand = (Math.floor(Math.random() * (max - min)) + min);
-    memories[rand].currentTime = 0;
-    memories[rand].play();
-  }
+  // function playMemory() {
+  //   console.log("memory triggered");
+  //   var max = 0;
+  //   var min = 3;
+  //   var rand = (Math.floor(Math.random() * (max - min)) + min);
+  //   memories[rand].currentTime = 0;
+  //   memories[rand].play();
+  // }
 
   const sync = () => {
-    // setTime(1);
     setStart(Date.now());
     if (isPlaying(beat)) {
-      beat.currentTime = 0;
+      beat.stop();
+      beat.play();
     }
     if (isPlaying(synth)) {
-      synth.currentTime = 0;
+      synth.stop();
+      synth.play();
     }
     if (isPlaying(noise)) {
-      noise.currentTime = 0
+      noise.stop()
+      noise.play()
     }
     if (isPlaying(atmos)) {
-      atmos.currentTime = 0
+      atmos.stop()
+      atmos.play()
     }
+  }
+
+  function hovered() {
+    !initialized && (initialized = true);
   }
 
   const empty = () => {
-    // setTime(1);
     setStart(Date.now());
     if (isPlaying(beat)) {
-      beat.pause();
+      beat.stop();
     }
     if (isPlaying(synth)) {
-      synth.pause();
+      synth.stop();
     }
     if (isPlaying(noise)) {
-      noise.pause();
+      noise.stop();
     }
     if (isPlaying(atmos)) {
-      atmos.pause();
+      atmos.stop();
     }
     sync();
   }
@@ -387,7 +439,7 @@ const App = (root: any) => {
         display: "flex", justifyContent: "center", alignItems: "center"
       }}>
         <motion.div style={{ color: "white", pointerEvents: "all" }} id="soundbox" className="card"
-          onClick={flipCard} ref={scope}>
+          onClick={flipCard} ref={scope} onHoverStart={hovered}>
           {flipped ? (
             <div className="centered">
               <p> ≽^•⩊•^≼
@@ -425,10 +477,7 @@ const App = (root: any) => {
                   value={volume}
                   onChange={event => {
                     setVolume(event.target.valueAsNumber)
-                    beat.volume = volume;
-                    synth.volume = volume;
-                    noise.volume = volume;
-                    atmos.volume = volume;
+                    Howler.volume(volume);
                   }}
                 >
                 </input></label>
