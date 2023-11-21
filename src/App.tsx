@@ -228,8 +228,8 @@ const App = (root: any) => {
   // VIDEOHANDLER
   let v: HTMLVideoElement = document.getElementById("vid-bg") as HTMLVideoElement;
   let v2: HTMLVideoElement = document.getElementById("vid-fg") as HTMLVideoElement;
-  v2 && (v2.playbackRate = 0.8);
-  v && (v.playbackRate = 1);
+  v2 && (v2.playbackRate = 4);
+  v && (v.playbackRate = 4);
   const vidinterval = 1;
   //currenttime in seconds
 
@@ -444,6 +444,7 @@ const App = (root: any) => {
   }
 
   const constraints = useRef(null);
+  const [deactivateDrag, setDeactivateDrag] = useState(false);
 
 
   return (
@@ -451,12 +452,14 @@ const App = (root: any) => {
       upHandler={prevIndex}
       downHandler={nextIndex}
     >
-      <video autoPlay src="pillows-back-new0001-0100.webm" muted id="vid-bg"
+      <video autoPlay src="pillows-back-new-20001-0400.webm" muted id="vid-bg"
         style={{
-          position: "absolute", width: "105%", right: "0px",
-          height: "105%", objectFit: "cover", pointerEvents: "none"
-        }}
-      />
+          position: "absolute", width: "100%",
+          height: "100%", objectFit: "cover", pointerEvents: "none"
+        }}>
+        <source src="pillows-back-new-50001-0400_H.265.mp4" type="video/mp4;codecs=hvc1" />
+        <source src="pillows-back-new-50001-0400_VP9" type="video/webm" />
+      </video>
       {/* <img src="background.png" alt="background" style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }} /> */}
       <div ref={constraints} style={{
         position: "absolute", /* width: "100%", height: "100%", margin: "100px", */
@@ -479,14 +482,9 @@ const App = (root: any) => {
         display: "flex", justifyContent: "center", alignItems: "center"
       }}>
         <motion.div style={{ color: "white", pointerEvents: "all" }}
-          id="soundbox" className="card" drag
+          id="soundbox" className="card"
+          drag={deactivateDrag ? false : true}
           dragConstraints={constraints}
-          // dragConstraints={{
-          //   top: -300,
-          //   right: 300,
-          //   bottom: 300,
-          //   left: -300,
-          // }}
           dragTransition={{ bounceStiffness: 600, bounceDamping: 15 }}
           dragElastic={0.5}
           whileTap={{ cursor: "grabbing" }}
@@ -558,13 +556,16 @@ const App = (root: any) => {
                   max={1}
                   step={0.02}
                   value={volume}
-                  onClick={event => event.stopPropagation()}
+                  onClick={event => { event.stopPropagation(); setDeactivateDrag(false) }}
+                  // onMouseEnter={() => { setDeactivateDrag(true) }}
+                  // onMouseLeave={() => { setDeactivateDrag(false) }}
                   onChange={event => {
                     setVolume(event.target.valueAsNumber)
                     beat.volume = volume;
                     synth.volume = volume;
                     noise.volume = volume;
                     atmos.volume = volume;
+                    setDeactivateDrag(true);
                   }}
                 >
                 </input></label>
@@ -585,12 +586,14 @@ const App = (root: any) => {
           )}
         </motion.div>
       </div>
-      <video autoPlay src="pillows-front-new0001-0100.webm" muted id="vid-fg"
+      <video autoPlay src="pillows-front-new-20001-0400.webm" muted id="vid-fg"
         style={{
-          position: "absolute", width: "107%", right: "0px",
-          height: "107%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
-        }}
-      />
+          position: "absolute", width: "100%", right: "0px",
+          height: "100%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
+        }}>
+        <source src="pillows-front-new-50001-0400_H.265.mp4" type="video/mp4;codecs=hvc1" />
+        <source src="pillows-front-new-50001-0400_VP9.webm" type="video/webm" />
+      </video>
     </ReactScrollWheelHandler >
   );
 }
