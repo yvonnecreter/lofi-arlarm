@@ -48,6 +48,7 @@
   --grad5: #e440bb;
   --grad5: #655adc;
   --grad5: #488cfb;
+  /* background: linear-gradient(to bottom, #163C52 0%, #4F4F47 30%, #C5752D 60%, #B7490F 80%, #2F1107 100%); */
 }
 
 
@@ -56,6 +57,14 @@
   display: flex;
   column-gap: 20px;
   justify-content: space-between;
+  align-content: flex-end;
+  align-items: center;
+}
+
+.centered {
+  display: flex;
+  text-align: center;
+  justify-content: center;
   align-content: center;
   align-items: center;
 }

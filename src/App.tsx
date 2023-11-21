@@ -1,22 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
-import "./App.css"
+import "./App.css";
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
+import { motion, useAnimate } from 'framer-motion';
+import { getElementError } from "@testing-library/react";
 
 const format = ".wav";
 const path = "export/alarm-generator-loops ";
-// const no: Array<any> = ["2", "3", "4", "5", "7", "8", "9", "10", "12", "13", "14", "15", "17", "18", "19", "20"];
-// const func = (): Array<any> => Array<any>(no.forEach((filename) => {
-//   let arr = new Array<any>();
-//   arr[filename] = new Audio("");
-//   arr[filename].src = path + filename + format;
-//   arr[filename].autostart = false;
-//   arr[filename].loop = true;
-//   return arr;
-// }));
-// const songs: Array<any> = func();
+const no: Array<any> = ["2", "3", "4", "5", "7", "8", "9", "10", "12", "13", "14", "15", "17", "18", "19", "20"];
+const func = () => (no.forEach((filename) => {
+  no[filename] = new Audio("");
+  no[filename].src = path + filename + format;
+  no[filename].preload();
+}));
+const clickAudio = new Audio("SC_EK_synth_lofi_chime_7th_Am.wav");
+const memories: Array<any> = [
+  new Audio(path + 25 + format),
+  new Audio(path + 24 + format),
+  new Audio(path + 23 + format),
+  new Audio(path + 22 + format),
+]
 
-function App() {
+const App = (root: any) => {
   const [volume, setVolume] = useState(.1)
   const [muted, setMuted] = useState(false)
   const finalVolume = muted ? 0 : volume ** 2
@@ -25,6 +30,7 @@ function App() {
   const maxCounter = 4000;
   const [time, setTime] = useState(maxTimer);
   const [timerStart, setTimerStart] = useState(false);
+
   const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
     loaderUrl: "build/build.loader.js",
     dataUrl: "build/build.data",
@@ -132,6 +138,7 @@ function App() {
       setTimerStart(true);
     }
   }
+
   const generateNoise = () => {
     var max = 17;
     var min = 20;
@@ -152,7 +159,6 @@ function App() {
     if (!timerStart) {
       setTimerStart(true);
     }
-
   }
 
   const generateAtmos = () => {
@@ -221,6 +227,23 @@ function App() {
   let [counter, setCounter] = useState(now - start);
 
 
+  // FLIP CARD
+  const [scope, animate] = useAnimate();
+  let [flipped, setFlipped] = useState<boolean>(false);
+  async function flipCard() {
+    if (!flipped) {
+      scope.current.style.minWidth = window.getComputedStyle(scope.current).width;
+      scope.current.style.minHeight = window.getComputedStyle(scope.current).height;
+      // scope.current.style.minWidth = scope.current.getBoundingClientRect().offsetWidth;
+      // scope.current.style.minHeight = scope.current.getBoundingClientRect().offsetHeight;
+      // scope.current.style.minWidth = "500px"
+      // scope.current.style.minHeight = "60px"
+    }
+    await animate(scope.current, { scale: 1.2, rotateY: -70 });
+    await setFlipped(!flipped);
+    await animate(scope.current, { scale: 1, rotateY: 0 });
+  }
+
   // VIDEOHANDLER
   let v: HTMLVideoElement = document.getElementById("vid-bg") as HTMLVideoElement;
   let v2: HTMLVideoElement = document.getElementById("vid-fg") as HTMLVideoElement;
@@ -229,22 +252,33 @@ function App() {
   const vidinterval = 1;
   //currenttime in seconds
 
-  const prevIndex = () => {
-    v.pause();
-    v2.pause();
-    v.currentTime -= vidinterval;
-    v2.currentTime -= vidinterval;
+  // var bg = root;
+  const nextIndex = () => {
+    // v.pause();
+    // v2.pause();
+    // v.currentTime -= vidinterval;
+    // v2.currentTime -= vidinterval;
+    // bg && (bg.style.background = "linear-gradient(to bottom, #b7eaff 0%,#94dfff 100%)");
+    // anim();
   }
 
-  const nextIndex = () => {
-    v.currentTime = 0;
-    v.play();
-    v2.currentTime = 0;
-    v2.play();
+  const prevIndex = () => {
+    // v.currentTime = 0;
+    // v.play();
+    // v2.currentTime = 0;
+    // v2.play();
+    // bg && (bg.style.background = "linear-gradient(to bottom, #b7eaff 0%,#94dfff 100%)");
+    // anim();
   }
+
+  //CHANGING BACKGROUND IS NOT WORKING  T.T taken out temporarily in the hopes future me might be able to fix it
+  const anim = () => {
+    // document.styleSheets[0].insertRule(':root {background = linear-gradient(to bottom, #94c5f8 1%,#a6e6ff 70%,#b1b5ea 100%)}');
+  }
+
+  // (isLoaded) && (bg && (bg.style.background = "linear-gradient(to bottom, #020111 10%,#3a3a52 100%)"));
 
   useEffect(() => {
-
     const interval = setInterval(() => {
       setNow(Date.now());
       setCounter(now - start);
@@ -261,39 +295,6 @@ function App() {
       }
     }, 1);
 
-    // if (counter > 5) {
-    //   for (var i in queue) {
-    //     queue[i]();
-    //   }
-    //   setQueue([]);
-    //   setStart(Date.now());
-    // } else {
-    //   setNow(Date.now());
-    //   setCounter(now - start);
-    // }
-
-    // const interval = setInterval(() => {
-    //   if (timerStart) {
-    //     if (time < 2) {
-    //       setTime(time + 1);
-    //     } else if (time === 8) {
-    //       for (var i in queue) {
-    //         queue[i]();
-    //       }
-    //       setQueue([]);
-    //       setTime(time + 1);
-    //     }
-    //     else if (time > 1 && time < maxTimer) {
-    //       setTime(time + 1);
-    //     } else if (time > maxTimer - 1) {
-    //       for (var i in queue) {
-    //         queue[i]();
-    //       }
-    //       setQueue([]);
-    //     }
-    //   }
-    // }, 500);
-
     const updateDevicePixelRatio = function () {
       setDevicePixelRatio(window.devicePixelRatio);
       v.currentTime = 0;
@@ -306,10 +307,6 @@ function App() {
     );
     mediaMatcher.addEventListener("change", updateDevicePixelRatio);
 
-    // return function () {
-    //   mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
-    //   clearInterval(interval);
-    // };
     return function () {
       mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
       clearInterval(interval);
@@ -334,6 +331,7 @@ function App() {
       atmos.currentTime = 0
     }
   }
+
   const empty = () => {
     // setTime(1);
     setStart(Date.now());
@@ -357,7 +355,7 @@ function App() {
       upHandler={prevIndex}
       downHandler={nextIndex}
     >
-      <video autoPlay src="pillows-back0001-0100.webm" muted id="vid-bg"
+      <video autoPlay src="pillows-back-new0001-0100.webm" muted id="vid-bg"
         style={{
           position: "absolute", width: "100%",
           height: "100%", objectFit: "cover", pointerEvents: "none"
@@ -377,56 +375,65 @@ function App() {
         height: "100%", objectFit: "cover", pointerEvents: "none",
         display: "flex", justifyContent: "center", alignItems: "center"
       }}>
-        <div style={{ color: "white" }} id="soundbox" className="card">
-          <h1>
-            Wakeup Sound Generator
-          </h1>
-          <h3>
-            Generate
-          </h3>
-          <section className="containerSpaceReg">
-            <p style={{ width: "80px" }}>Timer: {Math.floor(counter / 1000) + 1}</p>
-            <button onClick={generateBeat} className="gradientButton" style={{ pointerEvents: "all" }}> beat </button>
-            <button onClick={generateAtmos} className="gradientButton" style={{ pointerEvents: "all" }}> atmos </button>
-            <button onClick={generateNoise} className="gradientButton" style={{ pointerEvents: "all" }}> noise </button>
-            <button onClick={generateSynth} className="gradientButton" style={{ pointerEvents: "all" }}> synth </button>
-          </section>
-          <br />
-          <section className="containerSpaceReg">
-            <button onClick={sync} className="shadedButton" style={{ pointerEvents: "all" }}> Sync </button>
-            <button onClick={empty} className="shadedButton" style={{ pointerEvents: "all" }}> X </button>
-          </section>
-          <br />
-          <section className="containerSpaceReg" style={{ pointerEvents: "all" }}>
-            <label className="containerSpaceReg">Volume: <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.02}
-              value={volume}
-              onChange={event => {
-                setVolume(event.target.valueAsNumber)
-                beat.volume = volume;
-                synth.volume = volume;
-                noise.volume = volume;
-                atmos.volume = volume;
-              }}
-            >
-            </input></label>
-            <p style={{ opacity: ".3" }}>
-              {finalVolume.toFixed(3)}
-            </p>
+        <motion.div style={{ color: "white", pointerEvents: "all" }} id="soundbox" className="card"
+          onClick={flipCard} ref={scope}>
+          {flipped ? (
+            <div className="centered">
+              <p> ≽^•⩊•^≼
+                <br />
+                have a cute day! </p>
 
-            <button onClick={() => {
-              setMuted(m => !m)
-              beat.muted = !muted;
-              synth.muted = !muted;
-              noise.muted = !muted;
-              atmos.muted = !muted;
-            }} className="shadedButton" >{muted ? "unmute" : "mute"}</button>
+            </div>
+          ) : (
+            <div>
+              <h1>
+                Wakeup Sound Generator
+              </h1>
+              <h3>
+                Generate
+              </h3>
+              <section className="containerSpaceReg">
+                <p style={{ width: "80px" }}>Timer: {Math.floor(counter / 1000) + 1}</p>
+                <button onClick={generateBeat} className="gradientButton" style={{ pointerEvents: "all" }}> beat </button>
+                <button onClick={generateAtmos} className="gradientButton" style={{ pointerEvents: "all" }}> atmos </button>
+                <button onClick={generateNoise} className="gradientButton" style={{ pointerEvents: "all" }}> noise </button>
+                <button onClick={generateSynth} className="gradientButton" style={{ pointerEvents: "all" }}> synth </button>
+              </section>
+              <br />
+              <section className="containerSpaceReg">
+                <button onClick={sync} className="shadedButton" style={{ pointerEvents: "all" }}> Sync </button>
+                <button onClick={empty} className="shadedButton" style={{ pointerEvents: "all" }}> X </button>
+              </section>
+              <br />
+              <section className="containerSpaceReg" style={{ pointerEvents: "all" }}>
+                <label className="containerSpaceReg">Volume: <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.02}
+                  value={volume}
+                  onChange={event => {
+                    setVolume(event.target.valueAsNumber)
+                    beat.volume = volume;
+                    synth.volume = volume;
+                    noise.volume = volume;
+                    atmos.volume = volume;
+                  }}
+                >
+                </input></label>
+                <p style={{ opacity: ".3" }}>
+                  {finalVolume.toFixed(3)}
+                </p>
 
+                <button onClick={() => {
+                  setMuted(m => !m)
+                  beat.muted = !muted;
+                  synth.muted = !muted;
+                  noise.muted = !muted;
+                  atmos.muted = !muted;
+                }} className="shadedButton" >{muted ? "unmute" : "mute"}</button>
 
-            {/* <label className="shadedToggleButton" >
+                {/* <label className="shadedToggleButton" >
               {muted ? "unmute" : "mute"}
               <input id="toggle" type="checkbox" onClick={() => {
                 setMuted(m => !m)
@@ -440,18 +447,22 @@ function App() {
             </label> */}
 
 
-            {/* {muted ? "unmute" : "mute"} */}
-          </section>
-        </div>
+                {/* {muted ? "unmute" : "mute"} */}
+              </section>
+            </div>
+
+          )}
+        </motion.div>
       </div>
-      <video autoPlay src="pillows-front0001-0100.webm" muted id="vid-fg"
+      <video autoPlay src="pillows-back0001-0100.webm" muted id="vid-fg"
         style={{
           position: "absolute", width: "100%",
           height: "100%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
         }}
       />
-    </ReactScrollWheelHandler>
+    </ReactScrollWheelHandler >
   );
 }
+
 
 export default App;
