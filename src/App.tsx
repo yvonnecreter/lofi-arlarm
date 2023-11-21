@@ -72,71 +72,66 @@ const App = (root: any) => {
   noise.autostart = false;
   synth.autostart = false;
 
-  const buffer = .1;
+  // const buffer = .1;
 
-  beat.addEventListener(
-    'ended',
-    () => {
-      if (beat.loop()) {
-        beat.seek(0);
-        beat.play();
-      }
-    },
-    false
-  );
-  atmos.addEventListener(
-    'ended',
-    () => {
-      if (atmos.loop()) {
-        atmos.seek(0);
-        atmos.play();
-      }
-    },
-    false
-  );
-  synth.addEventListener(
-    'ended',
-    () => {
-      if (synth.loop()) {
-        synth.seek(0);
-        synth.play();
-      }
-    },
-    false
-  );
-  noise.addEventListener(
-    'ended',
-    () => {
-      if (noise.loop()) {
-        noise.seek(0);
-        noise.play();
-      }
-    },
-    false
-  );
+  // beat.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (beat.loop()) {
+  //       beat.seek(0);
+  //       beat.play();
+  //     }
+  //   },
+  //   false
+  // );
+  // atmos.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (atmos.loop()) {
+  //       atmos.seek(0);
+  //       atmos.play();
+  //     }
+  //   },
+  //   false
+  // );
+  // synth.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (synth.loop()) {
+  //       synth.seek(0);
+  //       synth.play();
+  //     }
+  //   },
+  //   false
+  // );
+  // noise.addEventListener(
+  //   'ended',
+  //   () => {
+  //     if (noise.loop()) {
+  //       noise.seek(0);
+  //       noise.play();
+  //     }
+  //   },
+  //   false
+  // );
 
   const generateBeat = () => {
     var max = 12;
     var min = 15;
     var rand: any = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
-      beat.pause();
+      !beat.paused && beat.pause();
       beat.src = path + rand + format;
-      // beat.prototype._createNodes = function () {
-      //   var context = beat._context;
-      //   this._sourceNode = context.createBufferSource();
-      // };
-      // setBeat = songs[rand];
-      beat.play();
-      if (!isPlaying(beat)) {
+      beat.addEventListener('canplay', () => {
         beat.play();
-        // beat.currentTime = 0;
-      }
+      });
     }
     setQueue([...queue, f])
     if (!timerStart) {
       setTimerStart(true);
     }
+    setPaused(false);
+    setInitialized(true);
   }
 
   const generateNoise = () => {
@@ -144,21 +139,18 @@ const App = (root: any) => {
     var min = 20;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
-      noise.pause();
+      !noise.paused && noise.pause();
       noise.src = path + rand + format;
-      // noise.prototype._createNodes = function () {
-      //   var context = noise._context;
-      //   this._sourceNode = context.createBufferSource();
-      // };
-      if (!isPlaying(noise)) {
+      noise.addEventListener('canplay', () => {
         noise.play();
-        // noise.currentTime = 0;
-      }
+      });
     }
     setQueue([...queue, f])
     if (!timerStart) {
       setTimerStart(true);
     }
+    setPaused(false);
+    setInitialized(true);
   }
 
   const generateAtmos = () => {
@@ -166,43 +158,36 @@ const App = (root: any) => {
     var min = 2;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
-      atmos.pause();
+      !atmos.paused && atmos.pause();
       atmos.src = path + rand + format;
-      // atmos.prototype._createNodes = function () {
-      //   var context = noise._context;
-      //   this._sourceNode = atmos.createBufferSource();
-      // };
-      if (!isPlaying(atmos)) {
+      atmos.addEventListener('canplay', () => {
         atmos.play();
-      }
+      });
     }
     setQueue([...queue, f])
     if (!timerStart) {
       setTimerStart(true);
     }
-
+    setPaused(false);
+    setInitialized(true);
   }
   const generateSynth = () => {
     var max = 7;
     var min = 10;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
-      synth.pause();
+      !synth.paused && synth.pause();
       synth.src = path + rand + format;
-      // synth.prototype._createNodes = function () {
-      //   var context = noise._context;
-      //   this._sourceNode = synth.createBufferSource();
-      // };
-      if (!isPlaying(synth)) {
+      synth.addEventListener('canplay', () => {
         synth.play();
-        // synth.currentTime = 0;
-      }
+      });
     }
     setQueue([...queue, f])
     if (!timerStart) {
       setTimerStart(true);
     }
-
+    setPaused(false);
+    setInitialized(true);
   }
 
   function isPlaying(audio: HTMLAudioElement) {
@@ -212,16 +197,6 @@ const App = (root: any) => {
   const [queue, setQueue] = useState<any>([]);
 
 
-  // const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-  // const audioQueue = async () => {
-  //   console.log("Ran Top of Audioqueue");
-  //   await delay(1000);
-  //   for (var i in queue) {
-  //     queue[i]();
-  //   }
-  //   setQueue([]);
-  //   console.log("Ran Audioqueue");
-  // };
   let [start, setStart] = useState(Date.now());
   let [now, setNow] = useState(start);
   let [counter, setCounter] = useState(now - start);
@@ -293,6 +268,7 @@ const App = (root: any) => {
       if (counter > maxCounter) {
         setStart(Date.now());
       }
+
     }, 1);
 
     const updateDevicePixelRatio = function () {
@@ -327,7 +303,6 @@ const App = (root: any) => {
   }
 
   const sync = () => {
-    // setTime(1);
     setStart(Date.now());
     if (isPlaying(beat)) {
       beat.currentTime = 0;
@@ -344,8 +319,8 @@ const App = (root: any) => {
   }
 
   const empty = () => {
-    // setTime(1);
-    setStart(Date.now());
+    setInitialized(false);
+    setPaused(true);
     if (isPlaying(beat)) {
       beat.pause();
     }
@@ -360,6 +335,56 @@ const App = (root: any) => {
     }
     sync();
   }
+
+
+  const [paused, setPaused] = useState(true)
+  const [initialized, setInitialized] = useState(false)
+
+  const rand = () => {
+    empty();
+    setInitialized(true);
+    setPaused(false);
+    Math.random() < 0.5 && generateSynth()
+    Math.random() < 0.5 && generateBeat()
+    Math.random() < 0.5 && generateAtmos()
+    Math.random() < 0.5 && generateNoise()
+  }
+
+  const pause = () => {
+    if (!paused) {
+      if (isPlaying(beat)) {
+        beat.pause();
+      }
+      if (isPlaying(synth)) {
+        synth.pause();
+      }
+      if (isPlaying(noise)) {
+        noise.pause();
+      }
+      if (isPlaying(atmos)) {
+        atmos.pause();
+      }
+      setPaused(true);
+    } else {
+      if (!initialized) {
+        rand()
+      } else {
+        initSafePlay(synth);
+        initSafePlay(beat);
+        initSafePlay(atmos);
+        initSafePlay(noise);
+      }
+    }
+  }
+
+  const initSafePlay = (a: any) => {
+    setInitialized(true);
+    setPaused(false);
+    if (a.currentSrc) {
+      a.play();
+    }
+  }
+
 
   return (
     <ReactScrollWheelHandler
@@ -387,7 +412,12 @@ const App = (root: any) => {
         display: "flex", justifyContent: "center", alignItems: "center"
       }}>
         <motion.div style={{ color: "white", pointerEvents: "all" }} id="soundbox" className="card"
-          onClick={flipCard} ref={scope}>
+          onClick={(e) => {
+            e.stopPropagation();
+            flipCard();
+          }}
+          ref={scope}>
+
           {flipped ? (
             <div className="centered">
               <p> ≽^•⩊•^≼
@@ -405,15 +435,17 @@ const App = (root: any) => {
               </h3>
               <section className="containerSpaceReg">
                 <p style={{ width: "80px" }}>Timer: {Math.floor(counter / 1000) + 1}</p>
-                <button onClick={generateBeat} className="gradientButton" style={{ pointerEvents: "all" }}> beat </button>
-                <button onClick={generateAtmos} className="gradientButton" style={{ pointerEvents: "all" }}> atmos </button>
-                <button onClick={generateNoise} className="gradientButton" style={{ pointerEvents: "all" }}> noise </button>
-                <button onClick={generateSynth} className="gradientButton" style={{ pointerEvents: "all" }}> synth </button>
+                <button onClick={(e) => { e.stopPropagation(); generateBeat(); }} className="gradientButton" style={{ pointerEvents: "all" }}> beat </button>
+                <button onClick={(e) => { e.stopPropagation(); generateAtmos(); }} className="gradientButton" style={{ pointerEvents: "all" }}> atmos </button>
+                <button onClick={(e) => { e.stopPropagation(); generateNoise(); }} className="gradientButton" style={{ pointerEvents: "all" }}> noise </button>
+                <button onClick={(e) => { e.stopPropagation(); generateSynth(); }} className="gradientButton" style={{ pointerEvents: "all" }}> synth </button>
               </section>
               <br />
               <section className="containerSpaceReg">
-                <button onClick={sync} className="shadedButton" style={{ pointerEvents: "all" }}> Sync </button>
-                <button onClick={empty} className="shadedButton" style={{ pointerEvents: "all" }}> X </button>
+                <button onClick={(e) => { e.stopPropagation(); sync(); }} className="shadedButton" style={{ pointerEvents: "all" }}> sync </button>
+                <button onClick={(e) => { e.stopPropagation(); pause(); }} className="shadedButton" style={{ pointerEvents: "all" }}> {paused ? "play" : "pause"} </button>
+                <button onClick={(e) => { e.stopPropagation(); rand(); }} className="shadedButton" style={{ pointerEvents: "all" }}> random </button>
+                <button onClick={(e) => { e.stopPropagation(); empty(); }} className="shadedButton" style={{ pointerEvents: "all" }}> X </button>
               </section>
               <br />
               <section className="containerSpaceReg" style={{ pointerEvents: "all" }}>
@@ -423,6 +455,7 @@ const App = (root: any) => {
                   max={1}
                   step={0.02}
                   value={volume}
+                  onClick={event => event.stopPropagation()}
                   onChange={event => {
                     setVolume(event.target.valueAsNumber)
                     beat.volume = volume;
@@ -436,32 +469,16 @@ const App = (root: any) => {
                   {finalVolume.toFixed(3)}
                 </p>
 
-                <button onClick={() => {
+                <button onClick={(e) => {
+                  e.stopPropagation();
                   setMuted(m => !m)
                   beat.muted = !muted;
                   synth.muted = !muted;
                   noise.muted = !muted;
                   atmos.muted = !muted;
                 }} className="shadedButton" >{muted ? "unmute" : "mute"}</button>
-
-                {/* <label className="shadedToggleButton" >
-              {muted ? "unmute" : "mute"}
-              <input id="toggle" type="checkbox" onClick={() => {
-                setMuted(m => !m)
-                beat.muted = !muted;
-                synth.muted = !muted;
-                noise.muted = !muted;
-                atmos.muted = !muted;
-                // }} className={muted ? "shadedToggleButton" : "shadedToggleButton"}>
-              }} className="toggleButton" ></input>
-              <button />
-            </label> */}
-
-
-                {/* {muted ? "unmute" : "mute"} */}
               </section>
             </div>
-
           )}
         </motion.div>
       </div>
