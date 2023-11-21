@@ -71,7 +71,7 @@ const App = (root: any) => {
   noise.autostart = false;
   synth.autostart = false;
 
-  const buffer = .455;
+  const buffer = .5;
 
   beat.addEventListener(
     'ended',
