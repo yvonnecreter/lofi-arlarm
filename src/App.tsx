@@ -46,8 +46,6 @@ const App = (root: any) => {
     },
   });
 
-
-
   const [devicePixelRatio, setDevicePixelRatio] = useState(
     window.devicePixelRatio
   );
@@ -253,6 +251,8 @@ const App = (root: any) => {
 
   // (isLoaded) && (bg && (bg.style.background = "linear-gradient(to bottom, #020111 10%,#3a3a52 100%)"));
 
+  const [uloaded, setUloaded] = useState(false);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(Date.now());
@@ -267,8 +267,8 @@ const App = (root: any) => {
       }
       if (counter > maxCounter) {
         setStart(Date.now());
+        isLoaded && setUloaded(true);
       }
-
     }, 1);
 
     const updateDevicePixelRatio = function () {
@@ -385,7 +385,6 @@ const App = (root: any) => {
     }
   }
 
-
   return (
     <ReactScrollWheelHandler
       upHandler={prevIndex}
@@ -402,7 +401,8 @@ const App = (root: any) => {
       <Unity
         unityProvider={unityProvider}
         style={{
-          width: "100vw", height: "100vh", position: "absolute", background: "transparent !important"
+          width: "100vw", height: "100vh", position: "absolute", background: "transparent !important",
+          opacity: uloaded ? "1" : "0", transitionProperty: "opacity", transition: "1s ease", transitionDelay: "2s"
         }}
         devicePixelRatio={devicePixelRatio}
       />
@@ -428,13 +428,13 @@ const App = (root: any) => {
           ) : (
             <div>
               <h1>
-                Wakeup Sound Generator
+                Wakeup Sound
               </h1>
               <h3>
                 Generate
               </h3>
               <section className="containerSpaceReg">
-                <p style={{ width: "80px" }}>Timer: {Math.floor(counter / 1000) + 1}</p>
+                <p style={{ width: "80px" }}>Beat: {Math.floor(counter / 1000) + 1}</p>
                 <button onClick={(e) => { e.stopPropagation(); generateBeat(); }} className="gradientButton" style={{ pointerEvents: "all" }}> beat </button>
                 <button onClick={(e) => { e.stopPropagation(); generateAtmos(); }} className="gradientButton" style={{ pointerEvents: "all" }}> atmos </button>
                 <button onClick={(e) => { e.stopPropagation(); generateNoise(); }} className="gradientButton" style={{ pointerEvents: "all" }}> noise </button>
