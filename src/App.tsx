@@ -27,6 +27,8 @@ const App = (root: any) => {
   const [muted, setMuted] = useState(false)
   const finalVolume = muted ? 0 : volume ** 2
 
+  const [queue, setQueue] = useState<any>([]);
+
   const maxTimer = 4;
   const maxCounter = 4000;
   const [time, setTime] = useState(maxTimer);
@@ -119,6 +121,7 @@ const App = (root: any) => {
     var min = 15;
     var rand: any = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
+      beat.alt = "playing"
       !beat.paused && beat.pause();
       beat.src = path + rand + format;
       beat.addEventListener('canplay', () => {
@@ -138,6 +141,7 @@ const App = (root: any) => {
     var min = 20;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
+      noise.alt = "playing"
       !noise.paused && noise.pause();
       noise.src = path + rand + format;
       noise.addEventListener('canplay', () => {
@@ -157,6 +161,7 @@ const App = (root: any) => {
     var min = 2;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
+      atmos.alt = "playing"
       !atmos.paused && atmos.pause();
       atmos.src = path + rand + format;
       atmos.addEventListener('canplay', () => {
@@ -171,10 +176,12 @@ const App = (root: any) => {
     setInitialized(true);
   }
   const generateSynth = () => {
+
     var max = 7;
     var min = 10;
     var rand = "" + (Math.floor(Math.random() * (max - min)) + min);
     const f = () => {
+      synth.alt = "playing"
       !synth.paused && synth.pause();
       synth.src = path + rand + format;
       synth.addEventListener('canplay', () => {
@@ -193,7 +200,6 @@ const App = (root: any) => {
     return !audio.paused;
   }
 
-  const [queue, setQueue] = useState<any>([]);
 
 
   let [start, setStart] = useState(Date.now());
@@ -221,8 +227,8 @@ const App = (root: any) => {
   // VIDEOHANDLER
   let v: HTMLVideoElement = document.getElementById("vid-bg") as HTMLVideoElement;
   let v2: HTMLVideoElement = document.getElementById("vid-fg") as HTMLVideoElement;
-  v2 && (v2.playbackRate = 0.4);
-  v && (v.playbackRate = 0.4);
+  v2 && (v2.playbackRate = 0.8);
+  v && (v.playbackRate = 1);
   const vidinterval = 1;
   //currenttime in seconds
 
@@ -295,7 +301,6 @@ const App = (root: any) => {
   );
 
   function playMemory() {
-    console.log("memory triggered");
     var max = 0;
     var min = 3;
     var rand = (Math.floor(Math.random() * (max - min)) + min);
@@ -334,6 +339,10 @@ const App = (root: any) => {
     if (isPlaying(atmos)) {
       atmos.pause();
     }
+    beat.alt = "ejected"
+    atmos.alt = "ejected"
+    noise.alt = "ejected"
+    synth.alt = "ejected"
     sync();
   }
 
@@ -345,10 +354,43 @@ const App = (root: any) => {
     empty();
     setInitialized(true);
     setPaused(false);
-    Math.random() < 0.5 && generateSynth()
-    Math.random() < 0.5 && generateBeat()
-    Math.random() < 0.5 && generateAtmos()
-    Math.random() < 0.5 && generateNoise()
+
+    var am = 3;
+    var randS = "" + (Math.floor(Math.random() * am + 7));
+    var randB = "" + (Math.floor(Math.random() * am + 17));
+    var randA = "" + (Math.floor(Math.random() * am + 2));
+    var randN = "" + (Math.floor(Math.random() * am + 17));
+    const f = () => {
+      synth.alt = "playing"
+      beat.alt = "playing"
+      atmos.alt = "playing"
+      noise.alt = "playing"
+      !synth.paused && synth.pause();
+      !beat.paused && beat.pause();
+      !atmos.paused && atmos.pause();
+      !noise.paused && noise.pause();
+      synth.src = path + randS + format;
+      beat.src = path + randB + format;
+      atmos.src = path + randA + format;
+      noise.src = path + randN + format;
+
+      synth.addEventListener('canplay', () => {
+        synth.play();
+      });
+      beat.addEventListener('canplay', () => {
+        beat.play();
+      });
+      atmos.addEventListener('canplay', () => {
+        atmos.play();
+      });
+      noise.addEventListener('canplay', () => {
+        noise.play();
+      });
+    }
+    setQueue([...queue, f])
+    if (!timerStart) {
+      setTimerStart(true);
+    }
   }
 
   const pause = () => {
@@ -370,23 +412,35 @@ const App = (root: any) => {
       if (!initialized) {
         rand()
       } else {
-        initSafePlay(synth);
-        initSafePlay(beat);
-        initSafePlay(atmos);
-        initSafePlay(noise);
+        setInitialized(true);
+        setPaused(false);
+        if (synth.currentSrc && synth.alt != "ejected") {
+          synth.alt = "playing"
+          synth.play();
+        }
+        if (beat.currentSrc && beat.alt != "ejected") {
+          beat.alt = "playing"
+          beat.play();
+        }
+        if (atmos.currentSrc && atmos.alt != "ejected") {
+          atmos.alt = "playing"
+          atmos.play();
+        }
+        if (noise.currentSrc && noise.alt != "ejected") {
+          noise.alt = "playing"
+          noise.play();
+        }
       }
     }
   }
 
-  const initSafePlay = (a: any) => {
-    setInitialized(true);
-    setPaused(false);
-    if (a.currentSrc) {
-      a.play();
-    }
-  }
   const stop = (a: any) => {
     a.pause();
+    a.alt = "ejected";
+    if (beat.paused && atmos.paused && synth.paused && noise.paused) {
+      setPaused(true);
+      setInitialized(false);
+    }
   }
 
 
@@ -457,7 +511,7 @@ const App = (root: any) => {
                   </svg></button>
                 <button onClick={(e) => { e.stopPropagation(); generateNoise(); }} className="gradientButton" style={{ pointerEvents: "all" }}> noise
                   <svg viewBox="0 0 24 24" fill="none" className="closeButton"
-                    xmlns="http://www.w3.org/2000/svg" onClick={(e) => { e.stopPropagation(); stop(atmos) }} >
+                    xmlns="http://www.w3.org/2000/svg" onClick={(e) => { e.stopPropagation(); stop(noise) }} >
                     <g id="Menu / Close_SM">
                       <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </g>
@@ -514,8 +568,8 @@ const App = (root: any) => {
       </div>
       <video autoPlay src="pillows-front-new0001-0100.webm" muted id="vid-fg"
         style={{
-          position: "absolute", width: "110%", right: "0px",
-          height: "110%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
+          position: "absolute", width: "107%", right: "0px",
+          height: "107%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
         }}
       />
     </ReactScrollWheelHandler >
