@@ -346,7 +346,6 @@ const App = (root: any) => {
     sync();
   }
 
-
   const [paused, setPaused] = useState(true)
   const [initialized, setInitialized] = useState(false)
 
@@ -355,11 +354,11 @@ const App = (root: any) => {
     setInitialized(true);
     setPaused(false);
 
-    var am = 3;
+    var am = 4;
     var randS = "" + (Math.floor(Math.random() * am + 7));
-    var randB = "" + (Math.floor(Math.random() * am + 17));
-    var randA = "" + (Math.floor(Math.random() * am + 2));
     var randN = "" + (Math.floor(Math.random() * am + 17));
+    var randA = "" + (Math.floor(Math.random() * am + 2));
+    var randB = "" + (Math.floor(Math.random() * am + 12));
     const f = () => {
       synth.alt = "playing"
       beat.alt = "playing"
@@ -374,11 +373,11 @@ const App = (root: any) => {
       atmos.src = path + randA + format;
       noise.src = path + randN + format;
 
-      synth.addEventListener('canplay', () => {
-        synth.play();
-      });
       beat.addEventListener('canplay', () => {
         beat.play();
+      });
+      synth.addEventListener('canplay', () => {
+        synth.play();
       });
       atmos.addEventListener('canplay', () => {
         atmos.play();
