@@ -228,9 +228,12 @@ const App = (root: any) => {
   // VIDEOHANDLER
   let v: HTMLVideoElement = document.getElementById("vid-bg") as HTMLVideoElement;
   let v2: HTMLVideoElement = document.getElementById("vid-fg") as HTMLVideoElement;
-  v2 && (v2.playbackRate = 4);
-  v && (v.playbackRate = 4);
-  const vidinterval = 1;
+
+  const playspeedrate = 1;
+  v2 && (v2.playbackRate = playspeedrate);
+  v && (v.playbackRate = playspeedrate);
+
+
   //currenttime in seconds
 
   // var bg = root;
@@ -446,23 +449,47 @@ const App = (root: any) => {
   const constraints = useRef(null);
   const [deactivateDrag, setDeactivateDrag] = useState(false);
 
+  var vid = document.getElementById("vid-bg") as HTMLVideoElement;
+  let vid2 = document.getElementById("vid-fg") as HTMLVideoElement;
+
+  // var io = new IntersectionObserver(
+  //   entries => {
+  //     entries.forEach(entry => {
+  //       if (entry.isIntersecting) {
+  //         vid.play();
+  //         vid2.play();
+  //       } else {
+  //         vid.pause();
+  //         vid2.pause();
+  //       }
+  //     });
+  //   },
+  //   {
+  //     root: null,
+  //     rootMargin: "0px",
+  //     threshold: 0.5
+  //   }
+  // );
+
+  // vid && io.observe(vid)
+  // vid2 && io.observe(vid2)
 
   return (
     <ReactScrollWheelHandler
       upHandler={prevIndex}
       downHandler={nextIndex}
     >
-      <video autoPlay src="pillows-back-new-20001-0400.webm" muted id="vid-bg"
+      <video autoPlay muted id="vid-bg"
         style={{
           position: "absolute", width: "100%",
           height: "100%", objectFit: "cover", pointerEvents: "none"
         }}>
-        <source src="pillows-back-new-50001-0400_H.265.mp4" type="video/mp4;codecs=hvc1" />
-        <source src="pillows-back-new-50001-0400_VP9" type="video/webm" />
+        <source src="pillows-back-new-50001-0400.mp4" type="video/mp4;codecs=hvc1" />
+        <source src="pillows-back-new-50001-0400.webm" type="video/webm" />
       </video>
-      {/* <img src="background.png" alt="background" style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }} /> */}
+
       <div ref={constraints} style={{
-        position: "absolute", /* width: "100%", height: "100%", margin: "100px", */
+        position: "absolute",
         top: "100px",
         bottom: " 100px",
         left: "100px",
@@ -586,13 +613,13 @@ const App = (root: any) => {
           )}
         </motion.div>
       </div>
-      <video autoPlay src="pillows-front-new-20001-0400.webm" muted id="vid-fg"
+      <video autoPlay muted id="vid-fg"
         style={{
           position: "absolute", width: "100%", right: "0px",
           height: "100%", objectFit: "cover", pointerEvents: "none", zIndex: "999"
         }}>
-        <source src="pillows-front-new-50001-0400_H.265.mp4" type="video/mp4;codecs=hvc1" />
-        <source src="pillows-front-new-50001-0400_VP9.webm" type="video/webm" />
+        <source src="pillows-front-new-50001-0400.mp4" type="video/mp4;codecs=hvc1" />
+        <source src="pillows-front-new-50001-0400.webm" type="video/webm" />
       </video>
     </ReactScrollWheelHandler >
   );
